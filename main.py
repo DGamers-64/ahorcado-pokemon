@@ -43,46 +43,51 @@ def preguntar_letra(letras):
     return letras
 
 def comprobar_resultado(palabra, letras):
-    errores = 0
-    correcto = 0
-    for i in letras:
-        if(i not in palabra):
-            errores += 1
-        else:
-            correcto += 1
+    letras_correctas = set(letras)
+    correcto = sum(1 for letra in set(palabra) if letra in letras_correctas)
+    errores = sum(1 for letra in letras if letra not in palabra)
     return correcto, errores
 
 def aleatorio():
-    with open('pokemon.csv', newline='') as f:
+    with open('pokemon.csv', newline='', encoding='utf-8') as f:
         data = csv.reader(f, delimiter=',')
         pokemons = list(data)
-    numero = random.randint(1,len(pokemons))
+
+    numero = random.randint(1, len(pokemons) - 1)
     pokemon = pokemons[numero][1]
     generacion = pokemons[numero][4]
-    tipo_numero = random.randint(2,3)
-    tipo = pokemons[numero][tipo_numero]
-    tipo = tipo.upper()
+    tipo_numero = random.randint(2, 3)
+    tipo = pokemons[numero][tipo_numero].upper()
     pokemon = pokemon.upper()
+
     errores = 0
     completado = False
     letras = []
-    while(errores < 7 and completado != True):
+
+    total_unicas = len(set(pokemon))
+
+    while errores < 7 and not completado:
         print('--------------------')
         imprimir_tablero(pokemon, letras)
-        if(errores == 5):
-            print(generacion, "a generación", sep="")
-        if(errores == 6):
-            print(generacion, "a generación", sep="")
-            print(tipo, "es un tipo del Pokémon")
+        if errores == 5:
+            print(f"{generacion}a generación")
+        if errores == 6:
+            print(f"{generacion}a generación")
+            print(f"{tipo} es un tipo del Pokémon")
         print('--------------------')
+        
         letras = preguntar_letra(letras)
+        
         correcto, errores = comprobar_resultado(pokemon, letras)
-        if(correcto == len(pokemon)):
+        
+        if correcto == total_unicas:
             completado = True
-    if(completado == True):
-        print("¡Enhorabuena, el pokémon era ", pokemon.capitalize(), "!", sep="")
+
+    if completado:
+        print(f"¡Enhorabuena, el pokémon era {pokemon.capitalize()}!")
     else:
-        print("¡Se acabó! El pokémon era", pokemon.capitalize())
+        print(f"¡Se acabó! El pokémon era {pokemon.capitalize()}")
+
     return
 
 def versus():
@@ -94,24 +99,31 @@ def versus():
     errores = 0
     completado = False
     letras = []
-    while(errores < 7 and completado != True):
+    total_unicas = len(set(pokemon))
+    
+    while errores < 7 and not completado:
         print('--------------------')
         imprimir_tablero(pokemon, letras)
-        if(errores == 5):
+        if errores == 5:
             print(generacion, "a generación", sep="")
-        if(errores == 6):
+        if errores == 6:
             print(generacion, "a generación", sep="")
             print(tipo, "es un tipo del Pokémon")
         print('--------------------')
+        
         letras = preguntar_letra(letras)
+        
         correcto, errores = comprobar_resultado(pokemon, letras)
-        if(correcto == len(pokemon)):
+        
+        if correcto == total_unicas:
             completado = True
-    if(completado == True):
+
+    if completado:
         print("¡Enhorabuena, el pokémon era ", pokemon.capitalize(), "!", sep="")
     else:
         print("¡Se acabó! El pokémon era", pokemon.capitalize())
     return
+
 
 def juego(modo):
     match modo:
