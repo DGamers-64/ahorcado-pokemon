@@ -1,4 +1,6 @@
 import getpass
+import csv
+import random
 
 def preguntar_modo():
     print("¿Qué modo quieres jugar?")
@@ -20,8 +22,6 @@ def preguntar_seguir_jugando():
         return respuesta
     return respuesta
 
-####################################################
-
 def imprimir_tablero(palabra, letras):
     for i in palabra:
         if(i in letras):
@@ -35,8 +35,6 @@ def imprimir_tablero(palabra, letras):
             print(i, end=" ")
     print()
     return True
-
-####################################################
 
 def preguntar_letra(letras):
     letra = input("Dime una letra: ")
@@ -55,6 +53,36 @@ def comprobar_resultado(palabra, letras):
     return correcto, errores
 
 def aleatorio():
+    with open('pokemon.csv', newline='') as f:
+        data = csv.reader(f, delimiter=',')
+        pokemons = list(data)
+    numero = random.randint(1,len(pokemons))
+    pokemon = pokemons[numero][1]
+    generacion = pokemons[numero][4]
+    tipo_numero = random.randint(2,3)
+    tipo = pokemons[numero][tipo_numero]
+    tipo = tipo.upper()
+    pokemon = pokemon.upper()
+    errores = 0
+    completado = False
+    letras = []
+    while(errores < 7 and completado != True):
+        print('--------------------')
+        imprimir_tablero(pokemon, letras)
+        if(errores == 5):
+            print(generacion, "a generación", sep="")
+        if(errores == 6):
+            print(generacion, "a generación", sep="")
+            print(tipo, "es un tipo del Pokémon")
+        print('--------------------')
+        letras = preguntar_letra(letras)
+        correcto, errores = comprobar_resultado(pokemon, letras)
+        if(correcto == len(pokemon)):
+            completado = True
+    if(completado == True):
+        print("¡Enhorabuena, el pokémon era ", pokemon.capitalize(), "!", sep="")
+    else:
+        print("¡Se acabó! El pokémon era", pokemon.capitalize())
     return
 
 def versus():
