@@ -1,0 +1,5 @@
+- Script de configuración con:
+	- Dibujito del ahorcado
+	- Filtro por generaciones
+	- Filtro por tipos
+	- Filtro por cantidad de letras
